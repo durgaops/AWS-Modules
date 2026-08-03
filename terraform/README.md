@@ -16,8 +16,8 @@ AWS Accounts
 
 | Layer | Path | Purpose |
 |-------|------|---------|
-| 1 Reusable Modules | `modules/` | `network/*`, `identity/*`, `security/*` + compute/storage primitives |
-| 2 Platform Compositions | `compositions/` | Opinionated stacks (`network-foundation`, `enterprise-connectivity`, …) |
+| 1 Reusable Modules | `modules/` | `network/*`, `identity/*`, `security/*`, `observability/*`, `compute/*` |
+| 2 Platform Compositions | `compositions/` | `network-foundation`, `observability-baseline`, `ec2-application-stack`, … |
 | 3 Golden-Path Blueprints | `blueprints/` | Pre-approved application patterns for teams |
 | 4 Environment Config | `environments/` | Per-env values (dev/test/prod) only — no logic |
 | 5 CI/CD Pipeline | `pipelines/` | Plan/apply, policy checks, promotion gates |
