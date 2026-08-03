@@ -1,0 +1,29 @@
+# Reusable pipeline steps (reference for Azure DevOps / Jenkins / CodePipeline)
+
+stages:
+  - name: validate
+    steps:
+      - terraform fmt -check -recursive
+      - terraform init -backend=false
+      - terraform validate
+
+  - name: plan
+    steps:
+      - terraform init
+      - terraform plan -var-file=$TFVARS -out=tfplan
+      # optional: checkov / tfsec / OPA against tfplan.json
+
+  - name: approve
+    when: environment in [test, prod]
+    type: manual
+
+  - name: apply
+    steps:
+      - terraform apply tfplan
+
+inputs:
+  blueprint: required   # e.g. three-tier-webapp
+  environment: required # e.g. dev
+  account_id: from accounts/account-map.yaml
+  tfvars: terraform/environments/<env>/<blueprint>.tfvars
+  working_dir: terraform/blueprints/<blueprint>

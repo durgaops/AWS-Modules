@@ -1,0 +1,13 @@
+# Deny unencrypted S3 buckets (example custom policy)
+
+metadata:
+  id: "CKV2_COE_S3_ENCRYPTION"
+  name: "Ensure S3 buckets declare KMS or AES256 encryption via module inputs"
+  category: "ENCRYPTION"
+
+definition:
+  cond_type: "attribute"
+  resource_types:
+    - "aws_s3_bucket_server_side_encryption_configuration"
+  attribute: "rule"
+  operator: "exists"

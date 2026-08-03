@@ -1,0 +1,15 @@
+# Checkov custom configuration
+
+# Usage:
+#   checkov -d terraform/ --config-file terraform-policy-library/checkov/.checkov.yaml
+
+compact: true
+framework:
+  - terraform
+quiet: false
+download-external-modules: false
+
+skip-check: []   # prefer exceptions/ over permanent skips
+
+# Example soft-fail for experimental workspaces only (override in CI):
+# soft-fail: true

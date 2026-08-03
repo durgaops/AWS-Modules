@@ -1,0 +1,22 @@
+# AWS account targeting for pipelines
+# Replace IDs with real account numbers from Control Tower / Organizations
+
+accounts:
+  shared-services: "111111111111"
+  network:         "222222222222"
+  dev:             "333333333333"
+  test:            "444444444444"
+  prod:            "555555555555"
+
+# Which blueprint deploys where (example)
+blueprint_targets:
+  three-tier-webapp:
+    - env: dev
+      account: dev
+    - env: test
+      account: test
+    - env: prod
+      account: prod
+  secure-data-platform:
+    - env: prod
+      account: prod

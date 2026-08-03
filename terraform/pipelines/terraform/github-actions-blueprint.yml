@@ -1,0 +1,80 @@
+# Terraform CI/CD — Golden Path deploy
+#
+# Flow:
+#   Blueprint + Environment tfvars + Account map
+#     → fmt / validate / plan
+#     → (optional) policy-as-code
+#     → apply (manual approval for test/prod)
+
+name: terraform-blueprint
+
+on:
+  workflow_dispatch:
+    inputs:
+      blueprint:
+        description: "Blueprint folder under blueprints/"
+        required: true
+        type: choice
+        options:
+          - three-tier-webapp
+          - secure-data-platform
+          - batch-compute
+      environment:
+        description: "Environment (dev|test|prod)"
+        required: true
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
+      action:
+        description: "plan or apply"
+        required: true
+        type: choice
+        options:
+          - plan
+          - apply
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        working-directory: terraform/blueprints/${{ inputs.blueprint }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.5"
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Fmt
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: |
+          terraform plan \
+            -var-file="../../environments/${{ inputs.environment }}/${{ inputs.blueprint }}.tfvars" \
+            -out=tfplan
+
+      - name: Terraform Apply
+        if: inputs.action == 'apply'
+        run: terraform apply -auto-approve tfplan

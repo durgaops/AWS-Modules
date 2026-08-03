@@ -1,0 +1,12 @@
+# Example CloudFormation Guard rule — S3 encryption required
+#
+# Usage:
+#   cfn-guard validate --data template.json --rules s3_encryption.guard
+
+rule s3_encryption_enabled when %resources.AWS::S3::Bucket!empty {
+  %resources.AWS::S3::Bucket {
+    Properties.BucketEncryption.ServerSideEncryptionConfiguration[*] {
+      ServerSideEncryptionByDefault.SSEAlgorithm in ["aws:kms", "AES256"]
+    }
+  }
+}
