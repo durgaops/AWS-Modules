@@ -1,27 +1,18 @@
-resource "aws_iam_role" "this" {
-  name                 = var.name
-  assume_role_policy   = var.assume_role_policy
-  max_session_duration = var.max_session_duration
-  permissions_boundary = var.permissions_boundary_arn
-  tags                 = var.tags
-}
+# Compatibility shim — prefer modules/identity/iam-role
 
-resource "aws_iam_role_policy_attachment" "managed" {
-  for_each   = toset(var.managed_policy_arns)
-  role       = aws_iam_role.this.name
-  policy_arn = each.value
-}
+module "this" {
+  source = "../identity/iam-role"
 
-resource "aws_iam_role_policy" "inline" {
-  for_each = var.inline_policies
-  name     = each.key
-  role     = aws_iam_role.this.id
-  policy   = each.value
-}
-
-resource "aws_iam_instance_profile" "this" {
-  count = var.create_instance_profile ? 1 : 0
-  name  = var.name
-  role  = aws_iam_role.this.name
-  tags  = var.tags
+  name                    = var.name
+  assume_role_policy      = var.assume_role_policy
+  managed_policy_arns     = var.managed_policy_arns
+  inline_policies         = var.inline_policies
+  max_session_duration    = var.max_session_duration
+  permissions_boundary_arn = var.permissions_boundary_arn
+  create_instance_profile = var.create_instance_profile
+  name_regex              = "^[a-zA-Z0-9+=,.@_-]+$"
+  required_tag_keys       = []
+  allow_inline_policies   = length(var.inline_policies) > 0
+  max_inline_policies     = max(length(var.inline_policies), 2)
+  tags                    = var.tags
 }

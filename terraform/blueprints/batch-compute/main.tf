@@ -1,4 +1,4 @@
-# Golden Path: batch-compute
+﻿# Golden Path: batch-compute
 # network-baseline + compute-baseline + secure-storage
 
 terraform {
@@ -12,7 +12,7 @@ terraform {
 }
 
 module "network" {
-  source = "../../compositions/network-baseline"
+  source = "../../compositions/network/network-baseline"
 
   name                 = "${var.name_prefix}-net"
   cidr_block           = var.vpc_cidr
@@ -23,7 +23,7 @@ module "network" {
 }
 
 module "artifacts" {
-  source = "../../compositions/secure-storage"
+  source = "../../compositions/storage/secure-storage"
 
   kms_key_name = "${var.name_prefix}-artifacts"
   bucket_name  = var.artifacts_bucket_name
@@ -31,7 +31,7 @@ module "artifacts" {
 }
 
 module "worker" {
-  source = "../../compositions/compute-baseline"
+  source = "../../compositions/compute/compute-baseline"
 
   role_name              = "${var.name_prefix}-worker-role"
   instance_name          = "${var.name_prefix}-worker"

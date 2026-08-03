@@ -1,4 +1,4 @@
-# Golden Path: secure-data-platform
+﻿# Golden Path: secure-data-platform
 # network-baseline + secure-storage + data-tier
 
 terraform {
@@ -12,7 +12,7 @@ terraform {
 }
 
 module "network" {
-  source = "../../compositions/network-baseline"
+  source = "../../compositions/network/network-baseline"
 
   name                 = "${var.name_prefix}-net"
   cidr_block           = var.vpc_cidr
@@ -23,7 +23,7 @@ module "network" {
 }
 
 module "lake_storage" {
-  source = "../../compositions/secure-storage"
+  source = "../../compositions/storage/secure-storage"
 
   kms_key_name = "${var.name_prefix}-lake"
   bucket_name  = var.lake_bucket_name
@@ -31,7 +31,7 @@ module "lake_storage" {
 }
 
 module "database" {
-  source = "../../compositions/data-tier"
+  source = "../../compositions/database/data-tier"
 
   kms_key_name           = "${var.name_prefix}-rds"
   identifier             = "${var.name_prefix}-db"

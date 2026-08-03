@@ -1,19 +1,15 @@
 output "key_id" {
-  description = "KMS key ID"
-  value       = aws_kms_key.this.key_id
+  value = module.this.key_id
 }
 
 output "key_arn" {
-  description = "KMS key ARN"
-  value       = aws_kms_key.this.arn
+  value = module.this.key_arn
 }
 
 output "alias_name" {
-  description = "KMS alias name"
-  value       = aws_kms_alias.this.name
+  value = module.this.alias_name
 }
 
 output "alias_arn" {
-  description = "KMS alias ARN"
-  value       = aws_kms_alias.this.arn
+  value = module.this.alias_arn
 }

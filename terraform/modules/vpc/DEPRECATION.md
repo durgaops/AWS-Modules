@@ -1,15 +1,8 @@
-# LEGACY MODULE — prefer terraform/modules/network/* + compositions/network-foundation
-#
-# This monolithic VPC module remains for backward compatibility with early
-# compositions (network-baseline). New work should use the granular network
-# modules under modules/network/.
+# LEGACY SHIM — prefer terraform/modules/network/* + compositions/network/network-foundation
 
-terraform {
-  required_version = ">= 1.5.0"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 5.0"
-    }
-  }
-}
+This root module still contains the old monolithic VPC stack for backward
+compatibility. New work must use:
+
+- `modules/network/vpc` (+ subnets, igw, nat, route-tables, …)
+- `compositions/network/network-foundation`
+- `compositions/network/network-baseline` (compat wrapper)

@@ -1,9 +1,9 @@
 # Terraform Operating Model
 
 ```
-Reusable Modules  (primitives)
+Reusable Modules  (primitives by domain)
        ↓
-Platform Compositions
+Platform Compositions  (by domain)
        ↓
 Golden-Path Blueprints
        ↓
@@ -16,12 +16,24 @@ AWS Accounts
 
 | Layer | Path | Purpose |
 |-------|------|---------|
-| 1 Reusable Modules | `modules/` | `network/*`, `identity/*`, `security/*`, `observability/*`, `compute/*` |
-| 2 Platform Compositions | `compositions/` | `network-foundation`, `observability-baseline`, `ec2-application-stack`, … |
+| 1 Reusable Modules | `modules/<domain>/` | `network`, `identity`, `security`, `observability`, `compute`, `storage`, `database` |
+| 2 Platform Compositions | `compositions/<domain>/` | `network/*`, `compute/*`, `storage/*`, `database/*`, `observability/*` |
 | 3 Golden-Path Blueprints | `blueprints/` | Pre-approved application patterns for teams |
 | 4 Environment Config | `environments/` | Per-env values (dev/test/prod) only — no logic |
 | 5 CI/CD Pipeline | `pipelines/` | Plan/apply, policy checks, promotion gates |
 | 6 AWS Accounts | `accounts/` | Account map / targeting for pipelines |
+
+## Domain map
+
+| Domain | Modules | Compositions |
+|--------|---------|--------------|
+| network | `modules/network/*` | `network-foundation`, `network-baseline`, `enterprise-connectivity` |
+| identity | `modules/identity/*` | (used via compute / security compositions) |
+| security | `modules/security/*` | (wired into storage / database compositions) |
+| observability | `modules/observability/*` | `observability-baseline` |
+| compute | `modules/compute/*` | `compute-baseline`, `ec2-application-stack` |
+| storage | `modules/storage/*` | `secure-storage` |
+| database | `modules/database/*` | `data-tier` |
 
 ## Rules
 
@@ -30,3 +42,4 @@ AWS Accounts
 3. **Blueprints** call compositions (and modules only if needed).
 4. **Environments** pass variables / tfvars only — they do not define new resources.
 5. **Pipelines** select blueprint + environment + target account.
+6. **New work** must use domain paths — never root legacy shims (`modules/s3`, `modules/ec2`, …).

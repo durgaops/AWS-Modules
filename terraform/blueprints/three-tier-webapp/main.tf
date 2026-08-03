@@ -1,4 +1,4 @@
-# Golden Path: three-tier-webapp
+﻿# Golden Path: three-tier-webapp
 # network-baseline + compute-baseline + data-tier + secure-storage
 
 terraform {
@@ -12,7 +12,7 @@ terraform {
 }
 
 module "network" {
-  source = "../../compositions/network-baseline"
+  source = "../../compositions/network/network-baseline"
 
   name                 = "${var.name_prefix}-net"
   cidr_block           = var.vpc_cidr
@@ -25,7 +25,7 @@ module "network" {
 }
 
 module "app_storage" {
-  source = "../../compositions/secure-storage"
+  source = "../../compositions/storage/secure-storage"
 
   kms_key_name = "${var.name_prefix}-app"
   bucket_name  = var.app_bucket_name
@@ -33,7 +33,7 @@ module "app_storage" {
 }
 
 module "app_compute" {
-  source = "../../compositions/compute-baseline"
+  source = "../../compositions/compute/compute-baseline"
 
   role_name              = "${var.name_prefix}-app-role"
   instance_name          = "${var.name_prefix}-app"
@@ -46,7 +46,7 @@ module "app_compute" {
 }
 
 module "database" {
-  source = "../../compositions/data-tier"
+  source = "../../compositions/database/data-tier"
 
   kms_key_name           = "${var.name_prefix}-rds"
   identifier             = "${var.name_prefix}-db"

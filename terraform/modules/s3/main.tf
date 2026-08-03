@@ -1,60 +1,25 @@
-resource "aws_s3_bucket" "this" {
-  bucket        = var.bucket_name
-  force_destroy = var.force_destroy
-  tags          = merge(var.tags, { Name = var.bucket_name })
-}
+# Compatibility shim — prefer modules/storage/s3-bucket
 
-resource "aws_s3_bucket_versioning" "this" {
-  bucket = aws_s3_bucket.this.id
-  versioning_configuration {
-    status = var.versioning_enabled ? "Enabled" : "Suspended"
-  }
-}
+module "this" {
+  source = "../storage/s3-bucket"
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
-  bucket = aws_s3_bucket.this.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm     = var.kms_key_arn != null ? "aws:kms" : "AES256"
-      kms_master_key_id = var.kms_key_arn
+  bucket_name            = var.bucket_name
+  force_destroy          = var.force_destroy
+  versioning_enabled     = var.versioning_enabled
+  require_versioning     = var.versioning_enabled
+  kms_key_arn            = var.kms_key_arn
+  require_kms            = var.kms_key_arn != null
+  allow_sse_s3           = var.kms_key_arn == null
+  require_access_logging = false
+  required_tag_keys      = []
+  name_regex             = ".+"
+  lifecycle_rules = [
+    for r in var.lifecycle_rules : {
+      id              = r.id
+      enabled         = r.enabled
+      expiration_days = try(r.expiration_days, null)
+      transitions     = try(r.transitions, [])
     }
-    bucket_key_enabled = var.kms_key_arn != null
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "this" {
-  bucket                  = aws_s3_bucket.this.id
-  block_public_acls       = var.block_public_access
-  block_public_policy     = var.block_public_access
-  ignore_public_acls      = var.block_public_access
-  restrict_public_buckets = var.block_public_access
-}
-
-resource "aws_s3_bucket_lifecycle_configuration" "this" {
-  count  = length(var.lifecycle_rules) > 0 ? 1 : 0
-  bucket = aws_s3_bucket.this.id
-
-  dynamic "rule" {
-    for_each = var.lifecycle_rules
-    content {
-      id     = rule.value.id
-      status = rule.value.enabled ? "Enabled" : "Disabled"
-
-      dynamic "expiration" {
-        for_each = rule.value.expiration_days != null ? [rule.value.expiration_days] : []
-        content {
-          days = expiration.value
-        }
-      }
-
-      dynamic "transition" {
-        for_each = rule.value.transitions
-        content {
-          days          = transition.value.days
-          storage_class = transition.value.storage_class
-        }
-      }
-    }
-  }
+  ]
+  tags = var.tags
 }

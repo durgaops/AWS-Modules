@@ -1,19 +1,15 @@
 output "instance_id" {
-  description = "EC2 instance ID"
-  value       = aws_instance.this.id
+  value = module.this.instance_id
 }
 
 output "private_ip" {
-  description = "Private IP address"
-  value       = aws_instance.this.private_ip
+  value = module.this.private_ip
 }
 
 output "public_ip" {
-  description = "Public IP address (if any)"
-  value       = aws_instance.this.public_ip
+  value = module.this.public_ip
 }
 
 output "arn" {
-  description = "EC2 instance ARN"
-  value       = aws_instance.this.arn
+  value = module.this.arn
 }

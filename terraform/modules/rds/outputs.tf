@@ -1,29 +1,23 @@
 output "db_instance_id" {
-  description = "RDS instance identifier"
-  value       = aws_db_instance.this.id
+  value = module.this.db_instance_id
 }
 
 output "db_instance_arn" {
-  description = "RDS instance ARN"
-  value       = aws_db_instance.this.arn
+  value = module.this.db_instance_arn
 }
 
 output "db_endpoint" {
-  description = "RDS connection endpoint"
-  value       = aws_db_instance.this.endpoint
+  value = module.this.db_endpoint
 }
 
 output "db_address" {
-  description = "RDS hostname"
-  value       = aws_db_instance.this.address
+  value = module.this.db_address
 }
 
 output "db_port" {
-  description = "RDS port"
-  value       = aws_db_instance.this.port
+  value = module.this.db_port
 }
 
 output "db_subnet_group_name" {
-  description = "DB subnet group name"
-  value       = aws_db_subnet_group.this.name
+  value = module.this.db_subnet_group_name
 }
