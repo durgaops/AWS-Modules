@@ -40,5 +40,6 @@ If the change is docs-only or unrelated to the catalog (typo in a comment, forma
 | Doc | Purpose |
 |-----|---------|
 | [docs/REUSABLE_MODULES_GUIDE.md](../docs/REUSABLE_MODULES_GUIDE.md) | Full catalog + how to reuse modules / multi-env |
+| [docs/SERVICENOW_AWS_ACCOUNT_PROVISIONING.md](../docs/SERVICENOW_AWS_ACCOUNT_PROVISIONING.md) | ServiceNow intake → approved AWS account ready |
 | [terraform/README.md](../terraform/README.md) | Operating model summary |
 | [README.md](../README.md) | Repo entry point |
