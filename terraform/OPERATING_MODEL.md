@@ -1,5 +1,7 @@
 # How to use this operating model
 
+> Detailed catalog and reuse instructions: **[docs/REUSABLE_MODULES_GUIDE.md](../docs/REUSABLE_MODULES_GUIDE.md)**
+
 ## Layer flow
 
 ```
