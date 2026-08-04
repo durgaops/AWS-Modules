@@ -3,6 +3,7 @@
 **Audience:** Platform engineers, application teams, and anyone consuming this library  
 **Repo:** [durgaops/AWS-Modules](https://github.com/durgaops/AWS-Modules)  
 **Last updated:** 2026-08-04  
+**Maintainer rules:** [Guide/README.md](../Guide/README.md)  
 
 This document is the **single source of truth** for:
 
@@ -11,7 +12,7 @@ This document is the **single source of truth** for:
 3. How to **reuse** modules without changing shared root code  
 4. How to stand up **dev / test / prod** (and more) safely  
 
-> **Maintenance rule:** Any create/update/delete of a module, composition, or blueprint **must** update this guide in the same change.
+> **Maintenance rule:** Any create/update/delete of a module, composition, or blueprint **must** update this guide in the same change. See **[Guide/README.md](../Guide/README.md)**.
 
 ---
 
@@ -467,6 +468,7 @@ Need infra in an environment?
 
 | Doc | Purpose |
 |-----|---------|
+| `Guide/README.md` | Maintainer rules (keep this catalog in sync) |
 | `terraform/README.md` | Operating model summary |
 | `terraform/OPERATING_MODEL.md` | How to start / local plan |
 | `terraform/modules/README.md` | Domain map + legacy shim table |
@@ -479,4 +481,5 @@ Need infra in an environment?
 
 | Date | Change |
 |------|--------|
+| 2026-08-04 | Moved maintainer rules to `Guide/` (removed IDE-specific `.cursor` path from the repo) |
 | 2026-08-04 | Initial guide: full inventory, reuse model, multi-env without root churn |

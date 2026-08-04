@@ -6,6 +6,8 @@ Enterprise Terraform module library for the AWS Cloud COE.
 
 **[Reusable Modules Guide](docs/REUSABLE_MODULES_GUIDE.md)** — full module catalog, how to reuse modules, and how to build **dev / test / prod** (and more) **without changing root module code**.
 
+**[Guide — Maintainer rules](Guide/README.md)** — what must be updated when modules/compositions change.
+
 ## Quick layout
 
 ```
