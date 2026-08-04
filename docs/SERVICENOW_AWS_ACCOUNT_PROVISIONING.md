@@ -6,6 +6,8 @@
 **Optional orchestration:** COE Portal / “Scout” (or any middleware) between ServiceNow and AWS  
 **Last updated:** 2026-08-04  
 
+> **How to use references:** Every major section ends with **References** — official AWS and ServiceNow documentation. Follow those links for authoritative steps, quotas, and product behavior. Prefer family/version docs that match your ServiceNow instance release.
+
 ---
 
 ## 1. Outcome in plain language
@@ -22,6 +24,15 @@
 **Target SLA (recommended):** Approved request → usable account within **hours**, not days (exact SLA is an org decision).
 
 > If your organization uses a portal named **Scout** (or similar), treat it as the **orchestration layer** in the middle of ServiceNow and AWS. The business outcome is the same: **an AWS account ready for use**.
+
+### References — Section 1
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | What is AWS Control Tower? | https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html |
+| AWS | IAM Identity Center (AWS SSO) overview | https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html |
+| ServiceNow | Service Catalog management | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/product/service-catalog-management/concept/c_ServiceCatalogManagement.html |
+| ServiceNow | Approvals overview | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/administer/approvals/concept/c_Approvals.html |
 
 ---
 
@@ -78,6 +89,22 @@
 | Governance | SCPs, Config, Security Hub, CloudTrail | Guardrails after account exists |
 | Feedback | ServiceNow Integration / EventBridge | Write Account ID / errors back to RITM |
 
+### References — Section 2
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | Organizing your AWS environment (multi-account) | https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html |
+| AWS | AFT overview | https://docs.aws.amazon.com/controltower/latest/userguide/aft-overview.html |
+| AWS | Provision accounts with AFT | https://docs.aws.amazon.com/controltower/latest/userguide/taf-account-provisioning.html |
+| AWS | Create an AWS account (Organizations) | https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_create.html |
+| AWS | Service control policies (SCPs) | https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html |
+| AWS | Amazon EventBridge | https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html |
+| AWS | API Gateway | https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html |
+| AWS | AWS Lambda | https://docs.aws.amazon.com/lambda/latest/dg/welcome.html |
+| AWS | AWS Step Functions | https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html |
+| ServiceNow | Flow Designer | https://docs.servicenow.com/bundle/yokohama-application-development/page/administer/flow-designer/concept/flow-designer.html |
+| ServiceNow | IntegrationHub | https://docs.servicenow.com/bundle/yokohama-integrationhub/page/administer/integrationhub/concept/c-IntegrationHub.html |
+
 ---
 
 ## 3. Prerequisites (collect these before build)
@@ -88,7 +115,7 @@
 |---|--------------|-------|-------|
 | 1 | Named **Cloud COE / Platform** owner for account vending | Cloud COE | ☐ |
 | 2 | Named **ServiceNow** app owner / developer | ITSM | ☐ |
-| 3 | Approval approval chain (Manager mandatory; Security optional) | Management | ☐ |
+| 3 | Named approval chain (Manager mandatory; Security optional) | Management | ☐ |
 | 4 | RACI for fail/retry/manual exception | COE + ITSM | ☐ |
 | 5 | Target SLA + support model after account is ready | COE Ops | ☐ |
 
@@ -135,6 +162,22 @@
 5. **SSO assignment** (who gets Admin / PowerUser / ReadOnly on day-1).  
 6. **What “READY” means** (account enrolled only, or also VPC + landing roles).  
 
+### References — Section 3
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | Getting started with AWS Control Tower | https://docs.aws.amazon.com/controltower/latest/userguide/getting-started-with-control-tower.html |
+| AWS | Plan your Control Tower landing zone | https://docs.aws.amazon.com/controltower/latest/userguide/planning-your-setup.html |
+| AWS | Deploy AFT | https://docs.aws.amazon.com/controltower/latest/userguide/aft-getting-started.html |
+| AWS | AFT deployment prerequisites | https://docs.aws.amazon.com/controltower/latest/userguide/aft-getting-started.html#aft-prereqs |
+| AWS | Organizational units | https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_ous.html |
+| AWS | AWS Secrets Manager | https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html |
+| AWS | IAM security best practices | https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html |
+| ServiceNow | Application scope (scoped apps) | https://docs.servicenow.com/bundle/yokohama-application-development/page/build/applications/concept/c_ApplicationScope.html |
+| ServiceNow | Configuration Management Database (CMDB) | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/product/configuration-management/concept/c_ConfigurationManagementDatabase.html |
+| ServiceNow | Access control list rules | https://docs.servicenow.com/bundle/yokohama-platform-security/page/administer/contextual-security/concept/access-control-rules.html |
+| ServiceNow | Product documentation home | https://docs.servicenow.com/ |
+
 ---
 
 ## 4. Things you need to collect (data catalog)
@@ -178,7 +221,7 @@
 | Data | Where stored |
 |------|----------------|
 | Allowed OUs & IDs | COE config repo / Parameter Store |
-| AFT request repo URL + branch rules | AFT | 
+| AFT request repo URL + branch rules | AFT |
 | CT Home Region | COE runbook |
 | Baseline customization package version | Git tag |
 | Allowed account name regex | Shared with SN client script |
@@ -192,6 +235,18 @@
 | Orchestrator → AWS role (assume role) | IAM + Secrets Manager | Lambda |
 | Git token for AFT account request PR (if used) | Secrets Manager | Orchestrator |
 | Webhook signing secret (SN ← AWS status) | Both sides | Status updates |
+
+### References — Section 4
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | Tagging AWS resources | https://docs.aws.amazon.com/tag-editor/latest/userguide/tagging.html |
+| AWS | AWS resource tagging best practices | https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html |
+| AWS | Identity Center permission sets | https://docs.aws.amazon.com/singlesignon/latest/userguide/permissionsetsconcept.html |
+| AWS | Systems Manager Parameter Store | https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html |
+| ServiceNow | Service Catalog variables | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/product/service-catalog-management/concept/c_ServiceCatalogVariables.html |
+| ServiceNow | Record producers / catalog items (platform) | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/product/service-catalog-management/concept/c_ServiceCatalogManagement.html |
+| ServiceNow | Connection & Credential aliases (IntegrationHub) | https://docs.servicenow.com/bundle/yokohama-integrationhub/page/administer/integrationhub/concept/c_ConnectionsCredentials.html |
 
 ---
 
@@ -284,6 +339,20 @@ Recommended Flow:
 #### Step G — Test the form in ServiceNow Dev
 
 Use non-production ServiceNow + non-production orchestration first.
+
+### References — Section 5
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| ServiceNow | Create a catalog item | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/product/service-catalog-management/task/t_CreateACatalogItem.html |
+| ServiceNow | Service Catalog variables | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/product/service-catalog-management/concept/c_ServiceCatalogVariables.html |
+| ServiceNow | UI Policies | https://docs.servicenow.com/bundle/yokohama-platform-administration/page/administer/form-administration/concept/c_UIPolicies.html |
+| ServiceNow | Client scripts | https://docs.servicenow.com/bundle/yokohama-application-development/page/script/client-scripts/concept/client-scripts.html |
+| ServiceNow | Flow Designer | https://docs.servicenow.com/bundle/yokohama-application-development/page/administer/flow-designer/concept/flow-designer.html |
+| ServiceNow | Ask for Approval flow logic | https://docs.servicenow.com/bundle/yokohama-application-development/page/administer/flow-designer/reference/flow-logic-ask-for-approval.html |
+| ServiceNow | Notifications | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/administer/notification/concept/c_Notification.html |
+| ServiceNow | Script Includes | https://docs.servicenow.com/bundle/yokohama-api-reference/page/script/server-scripting/concept/c_ScriptIncludes.html |
+| AWS | Control Tower limits and quotas (plan naming/capacity) | https://docs.aws.amazon.com/controltower/latest/userguide/limits.html |
 
 ---
 
@@ -392,6 +461,22 @@ Scripted REST API must:
 | Duplicate idempotency key | Return previous result | No second account |
 | Partial create | Follow AFT / CT recovery runbook | Hold RITM open |
 
+### References — Section 6
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | AFT account provisioning pipeline | https://docs.aws.amazon.com/controltower/latest/userguide/aft-provisioning-framework.html |
+| AWS | Provision accounts with AFT | https://docs.aws.amazon.com/controltower/latest/userguide/taf-account-provisioning.html |
+| AWS | Amazon API Gateway | https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html |
+| AWS | AWS Lambda | https://docs.aws.amazon.com/lambda/latest/dg/welcome.html |
+| AWS | AWS Step Functions | https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html |
+| AWS | Amazon EventBridge | https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html |
+| AWS | Making API requests using IAM (SigV4) | https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html |
+| ServiceNow | Scripted REST APIs | https://docs.servicenow.com/bundle/yokohama-application-development/page/integrate/custom-web-services/concept/c_CustomWebServices.html |
+| ServiceNow | Inbound REST API | https://docs.servicenow.com/bundle/yokohama-api-reference/page/integrate/inbound-rest/concept/c_RESTAPI.html |
+| ServiceNow | REST step in Flow Designer / IntegrationHub | https://docs.servicenow.com/bundle/yokohama-integrationhub/page/administer/flow-designer/reference/rest-step.html |
+| ServiceNow | IntegrationHub overview | https://docs.servicenow.com/bundle/yokohama-integrationhub/page/administer/integrationhub/concept/c-IntegrationHub.html |
+
 ---
 
 ## 7. AWS-side provisioning steps (Control Tower + AFT)
@@ -436,6 +521,22 @@ Optional READY+ (Phase 2):
 - [ ] Spoke VPC from network composition  
 - [ ] Default observability baseline  
 - [ ] Budget + anomaly detection  
+
+### References — Section 7
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | Deploy AFT | https://docs.aws.amazon.com/controltower/latest/userguide/aft-getting-started.html |
+| AWS | AFT post-deployment steps | https://docs.aws.amazon.com/controltower/latest/userguide/aft-post-deployment.html |
+| AWS | Provision accounts with AFT | https://docs.aws.amazon.com/controltower/latest/userguide/taf-account-provisioning.html |
+| AWS | AFT account provisioning pipeline | https://docs.aws.amazon.com/controltower/latest/userguide/aft-provisioning-framework.html |
+| AWS | AFT account customizations | https://docs.aws.amazon.com/controltower/latest/userguide/aft-account-customization.html |
+| AWS | Official AFT Terraform module (GitHub) | https://github.com/aws-ia/terraform-aws-control_tower_account_factory |
+| AWS | AFT on Terraform Registry | https://registry.terraform.io/modules/aws-ia/control_tower_account_factory/aws/latest |
+| AWS | AWS CloudTrail | https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html |
+| AWS | AWS Config | https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html |
+| AWS | Assign user access with Identity Center | https://docs.aws.amazon.com/singlesignon/latest/userguide/howtoassignusers.html |
+| ServiceNow | Update records from integrations (platform pattern) | https://docs.servicenow.com/bundle/yokohama-api-reference/page/integrate/inbound-rest/concept/c_RESTAPI.html |
 
 ---
 
@@ -490,6 +591,18 @@ Optional READY+ (Phase 2):
 
 **Exit criteria:** SLA met for pilot; backlog of defects empty or accepted.
 
+### References — Section 8
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | AWS Well-Architected Framework | https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html |
+| AWS | Security Pillar – Well-Architected | https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html |
+| AWS | Deploy AFT | https://docs.aws.amazon.com/controltower/latest/userguide/aft-getting-started.html |
+| AWS | Operational excellence (observability patterns) | https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html |
+| ServiceNow | Application Development (scoped apps / ALM) | https://docs.servicenow.com/bundle/yokohama-application-development/page/build/applications/concept/c_ApplicationDevelopment.html |
+| ServiceNow | Update Sets (promote Dev → Test → Prod) | https://docs.servicenow.com/bundle/yokohama-application-development/page/build/system-update-sets/concept/c_SystemUpdateSets.html |
+| ServiceNow | ATF (Automated Test Framework) | https://docs.servicenow.com/bundle/yokohama-application-development/page/administer/auto-test-framework/concept/automated-test-framework.html |
+
 ---
 
 ## 9. Roles & responsibilities (RACI summary)
@@ -505,6 +618,15 @@ Optional READY+ (Phase 2):
 
 R = Responsible, A = Accountable, C = Consulted, I = Informed  
 
+### References — Section 9
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | Shared Responsibility Model | https://aws.amazon.com/compliance/shared-responsibility-model/ |
+| AWS | Identity Center administrative permissions | https://docs.aws.amazon.com/singlesignon/latest/userguide/using-apps-with-admin-permission.html |
+| ServiceNow | User administration | https://docs.servicenow.com/bundle/yokohama-platform-administration/page/administer/users-and-groups/concept/c_UsersAndGroups.html |
+| ServiceNow | Groups and roles | https://docs.servicenow.com/bundle/yokohama-platform-administration/page/administer/roles/concept/c_Roles.html |
+
 ---
 
 ## 10. Security & compliance controls
@@ -516,6 +638,20 @@ R = Responsible, A = Accountable, C = Consulted, I = Informed
 5. **Prod requests** require extra approval and possibly Security.  
 6. **SCPs** prevent leaving OU/org, uncontrolled regions, disabling logging.  
 7. Secrets never stored in Catalog scripts as plain text.  
+
+### References — Section 10
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | IAM best practices | https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html |
+| AWS | Protect the root user | https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html |
+| AWS | Service control policies | https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html |
+| AWS | CloudTrail logging | https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html |
+| AWS | Secrets Manager security best practices | https://docs.aws.amazon.com/secretsmanager/latest/userguide/best-practices.html |
+| AWS | Security Hub | https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html |
+| ServiceNow | Platform security | https://docs.servicenow.com/bundle/yokohama-platform-security/page/administer/security/concept/c_Security.html |
+| ServiceNow | Access control rules | https://docs.servicenow.com/bundle/yokohama-platform-security/page/administer/contextual-security/concept/access-control-rules.html |
+| ServiceNow | Credential security / Connection aliases | https://docs.servicenow.com/bundle/yokohama-integrationhub/page/administer/integrationhub/concept/c_ConnectionsCredentials.html |
 
 ---
 
@@ -534,6 +670,15 @@ R = Responsible, A = Accountable, C = Consulted, I = Informed
 | 9 | SSO group assignment | User can log into new account |
 | 10 | CMDB CI created (if enabled) | CI linked to RITM |
 
+### References — Section 11
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | Testing IAM policies | https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_testing-policies.html |
+| AWS | AFT troubleshooting / operations (user guide ops topics) | https://docs.aws.amazon.com/controltower/latest/userguide/aft-overview.html |
+| ServiceNow | Automated Test Framework (ATF) | https://docs.servicenow.com/bundle/yokohama-application-development/page/administer/auto-test-framework/concept/automated-test-framework.html |
+| ServiceNow | REST API Explorer (test inbound APIs) | https://docs.servicenow.com/bundle/yokohama-api-reference/page/integrate/inbound-rest/concept/c_RESTAPI.html |
+
 ---
 
 ## 12. Operational SLAs (suggested)
@@ -547,6 +692,15 @@ R = Responsible, A = Accountable, C = Consulted, I = Informed
 | Status transparency on ticket | Updated at each major state |
 
 Tune to your org; publish in Service Catalog description.
+
+### References — Section 12
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | Control Tower account enrollment / factory timing expectations | https://docs.aws.amazon.com/controltower/latest/userguide/account-factory.html |
+| AWS | CloudWatch alarms (ops alerts) | https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html |
+| ServiceNow | Service Level Management / SLA definitions | https://docs.servicenow.com/bundle/yokohama-it-service-management/page/product/service-level-management/concept/c_ServiceLevelManagement.html |
+| ServiceNow | Service Catalog item descriptions (publish expectations) | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/product/service-catalog-management/concept/c_ServiceCatalogManagement.html |
 
 ---
 
@@ -564,6 +718,16 @@ Tune to your org; publish in Service Catalog description.
    - OU / environment  
    - Link to COE onboarding guide  
 6. User signs in via Identity Center and begins work (no root email login required).
+
+### References — Section 13
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | End-user access to AWS access portal (Identity Center) | https://docs.aws.amazon.com/singlesignon/latest/userguide/using-the-portal.html |
+| AWS | User guide for IAM Identity Center | https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html |
+| ServiceNow | Service Portal | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/build/service-portal/concept/c_ServicePortal.html |
+| ServiceNow | Employee Center (if used) | https://docs.servicenow.com/bundle/yokohama-employee-service-management/page/product/employee-center/concept/employee-center.html |
+| ServiceNow | Requested Item (RITM) concepts | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/product/service-catalog-management/concept/c_RequestManagement.html |
 
 ---
 
@@ -588,6 +752,15 @@ Typical sequence after account READY:
 
 Update `terraform/accounts/account-map.yaml` (or equivalent) when new accounts are approved for managed pipelines.
 
+### References — Section 14
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | AFT account customizations (post-create IaC) | https://docs.aws.amazon.com/controltower/latest/userguide/aft-account-customization.html |
+| AWS | Terraform AWS Provider | https://registry.terraform.io/providers/hashicorp/aws/latest/docs |
+| Repo | Reusable modules guide | [REUSABLE_MODULES_GUIDE.md](./REUSABLE_MODULES_GUIDE.md) |
+| Repo | Operating model | [terraform/OPERATING_MODEL.md](../terraform/OPERATING_MODEL.md) |
+
 ---
 
 ## 15. Decision: include Scout or not?
@@ -599,6 +772,15 @@ Update `terraform/accounts/account-map.yaml` (or equivalent) when new accounts a
 | Need max auditability | Prefer Step Functions + explicit state transitions |
 
 Both paths share the same SN form + AFT provisioning backend.
+
+### References — Section 15
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | Amazon API Gateway | https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html |
+| AWS | AWS Step Functions | https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html |
+| AWS | Lambda function URLs / API patterns | https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html |
+| ServiceNow | IntegrationHub spokes / REST integrations | https://docs.servicenow.com/bundle/yokohama-integrationhub/page/administer/integrationhub/concept/c-IntegrationHub.html |
 
 ---
 
@@ -616,9 +798,18 @@ Both paths share the same SN form + AFT provisioning backend.
 - [ ] Prod catalog enabled  
 - [ ] Training note for Product Owners  
 
+### References — Section 16
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | Control Tower user guide (landing index) | https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html |
+| AWS | AFT overview | https://docs.aws.amazon.com/controltower/latest/userguide/aft-overview.html |
+| ServiceNow | Service Catalog management index | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/product/service-catalog-management/concept/c_ServiceCatalogManagement.html |
+| ServiceNow | Docs home (search your exact release family) | https://docs.servicenow.com/ |
+
 ---
 
-## 17. Related documents
+## 17. Related documents (this repository)
 
 | Doc | Purpose |
 |-----|---------|
@@ -626,10 +817,53 @@ Both paths share the same SN form + AFT provisioning backend.
 | [Guide/README.md](../Guide/README.md) | Maintainer rules for this repo |
 | [terraform/OPERATING_MODEL.md](../terraform/OPERATING_MODEL.md) | Modules → compositions → envs |
 
+### References — Section 17
+
+| Vendor | Topic | Link |
+|--------|-------|------|
+| AWS | Terraform on AWS (guidance hub) | https://aws.amazon.com/terraform/ |
+| ServiceNow | Developer documentation portal | https://developer.servicenow.com/ |
+
 ---
 
-## 18. Document history
+## 18. Master reference index (bookmark this)
+
+Use this index when you need the primary vendor pages quickly.
+
+### AWS (primary)
+
+| Topic | Link |
+|-------|------|
+| Control Tower | https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html |
+| AFT overview | https://docs.aws.amazon.com/controltower/latest/userguide/aft-overview.html |
+| Deploy AFT | https://docs.aws.amazon.com/controltower/latest/userguide/aft-getting-started.html |
+| Provision with AFT | https://docs.aws.amazon.com/controltower/latest/userguide/taf-account-provisioning.html |
+| AFT GitHub module | https://github.com/aws-ia/terraform-aws-control_tower_account_factory |
+| Organizations | https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html |
+| Identity Center | https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html |
+| SCPs | https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html |
+| EventBridge | https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html |
+| Multi-account strategy whitepaper | https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html |
+
+### ServiceNow (primary)
+
+| Topic | Link |
+|-------|------|
+| Docs home (pick your release) | https://docs.servicenow.com/ |
+| Service Catalog | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/product/service-catalog-management/concept/c_ServiceCatalogManagement.html |
+| Flow Designer | https://docs.servicenow.com/bundle/yokohama-application-development/page/administer/flow-designer/concept/flow-designer.html |
+| IntegrationHub | https://docs.servicenow.com/bundle/yokohama-integrationhub/page/administer/integrationhub/concept/c-IntegrationHub.html |
+| Scripted REST APIs | https://docs.servicenow.com/bundle/yokohama-application-development/page/integrate/custom-web-services/concept/c_CustomWebServices.html |
+| Approvals | https://docs.servicenow.com/bundle/yokohama-servicenow-platform/page/administer/approvals/concept/c_Approvals.html |
+| Developer portal | https://developer.servicenow.com/ |
+
+> **ServiceNow note:** Bundle names (`yokohama`, `xanadu`, `washingtondc`, etc.) are release-family specific. If a link 404s, open https://docs.servicenow.com/ and search the page title, then select **your instance’s family**.
+
+---
+
+## 19. Document history
 
 | Date | Change |
 |------|--------|
+| 2026-08-04 | Added official AWS + ServiceNow reference links at the end of each major section + master index |
 | 2026-08-04 | Initial detailed ServiceNow ↔ AWS account provisioning guide (CT+AFT recommended; Scout optional) |
