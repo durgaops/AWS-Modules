@@ -469,6 +469,7 @@ Need infra in an environment?
 | Doc | Purpose |
 |-----|---------|
 | `Guide/README.md` | Maintainer rules (keep this catalog in sync) |
+| `docs/TERRAFORM_STRUCTURE_AND_USAGE.md` | Layered layout, root vs submodule, new env/project flows |
 | `docs/SERVICENOW_AWS_ACCOUNT_PROVISIONING.md` | ServiceNow → AWS account vending (CT + AFT) |
 | `terraform/README.md` | Operating model summary |
 | `terraform/OPERATING_MODEL.md` | How to start / local plan |
@@ -482,6 +483,7 @@ Need infra in an environment?
 
 | Date | Change |
 |------|--------|
+| 2026-08-06 | Linked Terraform structure & usage guide (root vs submodule flows) |
 | 2026-08-04 | Linked ServiceNow AWS account provisioning guide |
 | 2026-08-04 | Moved maintainer rules to `Guide/` (removed IDE-specific `.cursor` path from the repo) |
 | 2026-08-04 | Initial guide: full inventory, reuse model, multi-env without root churn |

@@ -1,6 +1,7 @@
 # How to use this operating model
 
-> Detailed catalog and reuse instructions: **[docs/REUSABLE_MODULES_GUIDE.md](../docs/REUSABLE_MODULES_GUIDE.md)**
+> Detailed catalog and reuse instructions: **[docs/REUSABLE_MODULES_GUIDE.md](../docs/REUSABLE_MODULES_GUIDE.md)**  
+> Structure, root vs submodule, new env/project: **[docs/TERRAFORM_STRUCTURE_AND_USAGE.md](../docs/TERRAFORM_STRUCTURE_AND_USAGE.md)**
 
 ## Layer flow
 

@@ -1,7 +1,8 @@
 # Terraform Operating Model
 
 > **Full catalog & how-to:** [docs/REUSABLE_MODULES_GUIDE.md](../docs/REUSABLE_MODULES_GUIDE.md)  
-> Read that guide first for the module inventory, reuse patterns, and multi-environment workflow without changing root modules.
+> **Structure / root vs submodule / new project:** [docs/TERRAFORM_STRUCTURE_AND_USAGE.md](../docs/TERRAFORM_STRUCTURE_AND_USAGE.md)  
+> Read those guides for inventory, reuse patterns, and multi-environment workflow without changing shared library modules.
 
 ```
 Reusable Modules  (primitives by domain)
