@@ -24,6 +24,7 @@ After following it, the organization should have:
 
 | Doc | Use when |
 |-----|----------|
+| [CLOUDOPS_DEVSECOPS_ROLES_AND_KICKSTART.md](./CLOUDOPS_DEVSECOPS_ROLES_AND_KICKSTART.md) | CloudOps vs DevSecOps roles, tasks, kickstart alignment |
 | [TERRAFORM_STRUCTURE_AND_USAGE.md](./TERRAFORM_STRUCTURE_AND_USAGE.md) | Root module vs project vs environment |
 | [REUSABLE_MODULES_GUIDE.md](./REUSABLE_MODULES_GUIDE.md) | Module catalog and reuse |
 | [SERVICENOW_AWS_ACCOUNT_PROVISIONING.md](./SERVICENOW_AWS_ACCOUNT_PROVISIONING.md) | Ticket → approved AWS account |

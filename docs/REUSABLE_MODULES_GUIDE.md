@@ -470,6 +470,7 @@ Need infra in an environment?
 |-----|---------|
 | `Guide/README.md` | Maintainer rules (keep this catalog in sync) |
 | `docs/ENTERPRISE_CLOUD_GOVERNANCE.md` | Enterprise governance, teams, AWS + GitHub Actions setup |
+| `docs/CLOUDOPS_DEVSECOPS_ROLES_AND_KICKSTART.md` | CloudOps & DevSecOps roles, tasks, kickstart alignment |
 | `docs/TERRAFORM_STRUCTURE_AND_USAGE.md` | Layered layout, root vs submodule, new env/project flows |
 | `docs/SERVICENOW_AWS_ACCOUNT_PROVISIONING.md` | ServiceNow → AWS account vending (CT + AFT) |
 | `terraform/README.md` | Operating model summary |
@@ -484,6 +485,7 @@ Need infra in an environment?
 
 | Date | Change |
 |------|--------|
+| 2026-08-10 | Linked CloudOps & DevSecOps kickstart guide |
 | 2026-08-10 | Linked enterprise cloud governance guide |
 | 2026-08-06 | Linked Terraform structure & usage guide (root vs submodule flows) |
 | 2026-08-04 | Linked ServiceNow AWS account provisioning guide |

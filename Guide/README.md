@@ -40,6 +40,7 @@ If the change is docs-only or unrelated to the catalog (typo in a comment, forma
 | Doc | Purpose |
 |-----|---------|
 | [docs/ENTERPRISE_CLOUD_GOVERNANCE.md](../docs/ENTERPRISE_CLOUD_GOVERNANCE.md) | Enterprise teams, duties, AWS + GitHub Actions from-scratch |
+| [docs/CLOUDOPS_DEVSECOPS_ROLES_AND_KICKSTART.md](../docs/CLOUDOPS_DEVSECOPS_ROLES_AND_KICKSTART.md) | CloudOps & DevSecOps roles, tasks, kickstart alignment |
 | [docs/REUSABLE_MODULES_GUIDE.md](../docs/REUSABLE_MODULES_GUIDE.md) | Full catalog + how to reuse modules / multi-env |
 | [docs/TERRAFORM_STRUCTURE_AND_USAGE.md](../docs/TERRAFORM_STRUCTURE_AND_USAGE.md) | Root vs submodule, layout, new env/project flowcharts |
 | [docs/SERVICENOW_AWS_ACCOUNT_PROVISIONING.md](../docs/SERVICENOW_AWS_ACCOUNT_PROVISIONING.md) | ServiceNow intake → approved AWS account ready |
