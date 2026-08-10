@@ -4,6 +4,8 @@ Enterprise Terraform module library for the AWS Cloud COE.
 
 ## Start here
 
+**[Enterprise Cloud Governance](docs/ENTERPRISE_CLOUD_GOVERNANCE.md)** — teams & duties, AWS standards, and from-scratch setup with GitHub Actions (single-repo → org).
+
 **[Reusable Modules Guide](docs/REUSABLE_MODULES_GUIDE.md)** — full module catalog, how to reuse modules, and how to build **dev / test / prod** (and more) **without changing root module code**.
 
 **[Terraform Structure & Usage](docs/TERRAFORM_STRUCTURE_AND_USAGE.md)** — how our layered layout works, root module vs submodules, flowcharts, and how to add a new environment or project.
