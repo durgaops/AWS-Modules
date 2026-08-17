@@ -25,6 +25,7 @@ After following it, the organization should have:
 | Doc | Use when |
 |-----|----------|
 | [CLOUDOPS_DEVSECOPS_ROLES_AND_KICKSTART.md](./CLOUDOPS_DEVSECOPS_ROLES_AND_KICKSTART.md) | CloudOps vs DevSecOps roles, tasks, kickstart alignment |
+| [ENTERPRISE_GITHUB_GOVERNANCE.md](./ENTERPRISE_GITHUB_GOVERNANCE.md) | Enterprise GitHub identity, repos, rulesets, Actions, OIDC, audit |
 | [TERRAFORM_STRUCTURE_AND_USAGE.md](./TERRAFORM_STRUCTURE_AND_USAGE.md) | Root module vs project vs environment |
 | [REUSABLE_MODULES_GUIDE.md](./REUSABLE_MODULES_GUIDE.md) | Module catalog and reuse |
 | [SERVICENOW_AWS_ACCOUNT_PROVISIONING.md](./SERVICENOW_AWS_ACCOUNT_PROVISIONING.md) | Ticket → approved AWS account |
@@ -203,6 +204,8 @@ Legend: **A** = Accountable, **R** = Responsible, **C** = Consulted, **I** = Inf
 | Chargeback | CostCenter + Application tags mandatory |
 
 ### 4.6 Delivery standards (GitHub Actions)
+
+Full GitHub org, identity, ruleset, and Actions policy: **[ENTERPRISE_GITHUB_GOVERNANCE.md](./ENTERPRISE_GITHUB_GOVERNANCE.md)**.
 
 | Standard | Requirement |
 |----------|-------------|
@@ -557,6 +560,7 @@ Every exception must record: ticket ID, risk, compensating controls, expiry, own
 |-------|------|
 | Actions blueprint starter | `terraform/pipelines/terraform/github-actions-blueprint.yml` |
 | Pipeline stages template | `terraform/pipelines/terraform/templates/pipeline-stages.yaml` |
+| Enterprise GitHub governance | [ENTERPRISE_GITHUB_GOVERNANCE.md](./ENTERPRISE_GITHUB_GOVERNANCE.md) |
 | Structure / root vs env | [TERRAFORM_STRUCTURE_AND_USAGE.md](./TERRAFORM_STRUCTURE_AND_USAGE.md) |
 | Module inventory | [REUSABLE_MODULES_GUIDE.md](./REUSABLE_MODULES_GUIDE.md) |
 | ServiceNow account vending | [SERVICENOW_AWS_ACCOUNT_PROVISIONING.md](./SERVICENOW_AWS_ACCOUNT_PROVISIONING.md) |
@@ -567,4 +571,5 @@ Every exception must record: ticket ID, risk, compensating controls, expiry, own
 
 | Date | Change |
 |------|--------|
+| 2026-08-17 | Linked enterprise GitHub governance document |
 | 2026-08-10 | Initial enterprise cloud governance standards (teams/duties, AWS+GitHub Actions, from-scratch phases) |

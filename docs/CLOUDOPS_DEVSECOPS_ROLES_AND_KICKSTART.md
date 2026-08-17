@@ -3,8 +3,8 @@
 **Audience:** CloudOps / Platform Operations, DevSecOps, Cloud COE leads, Security, App teams  
 **Platform:** AWS + GitHub Actions + this Terraform module library  
 **Purpose:** Define what **CloudOps** and **DevSecOps** own, how each team achieves its work, and what must be **aligned before kickoff**  
-**Companion doc:** [ENTERPRISE_CLOUD_GOVERNANCE.md](./ENTERPRISE_CLOUD_GOVERNANCE.md)  
-**Last updated:** 2026-08-10  
+**Companion docs:** [ENTERPRISE_CLOUD_GOVERNANCE.md](./ENTERPRISE_CLOUD_GOVERNANCE.md) · [ENTERPRISE_GITHUB_GOVERNANCE.md](./ENTERPRISE_GITHUB_GOVERNANCE.md)  
+**Last updated:** 2026-08-17  
 
 ---
 
@@ -377,6 +377,7 @@ Use existing starters in this repo:
 | Topic | Link |
 |-------|------|
 | Enterprise governance (parent) | [ENTERPRISE_CLOUD_GOVERNANCE.md](./ENTERPRISE_CLOUD_GOVERNANCE.md) |
+| Enterprise GitHub governance | [ENTERPRISE_GITHUB_GOVERNANCE.md](./ENTERPRISE_GITHUB_GOVERNANCE.md) |
 | Terraform root / env model | [TERRAFORM_STRUCTURE_AND_USAGE.md](./TERRAFORM_STRUCTURE_AND_USAGE.md) |
 | GitHub Actions OIDC → AWS | https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services |
 | Security hardening for Actions | https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions |
@@ -391,4 +392,5 @@ Use existing starters in this repo:
 
 | Date | Change |
 |------|--------|
+| 2026-08-17 | Linked enterprise GitHub governance companion |
 | 2026-08-10 | Initial CloudOps & DevSecOps roles, tasks, achievement paths, and kickstart alignment guide |
