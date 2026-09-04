@@ -1,7 +1,11 @@
-# Root Modules — Reusable Terraform Catalog
+# Root Modules — Catalog & Usage
 
-These are **library modules** owned by the Cloud COE.  
-Project repositories call them with a **versioned git source**. Environments only pass values.
+Reusable Terraform **Root Modules** for any current or upcoming project.
+
+**Standard:** Project repos call these modules directly (version-pinned).  
+**Not in scope:** Composition and Blueprint layers.
+
+---
 
 ## Module catalog
 
@@ -28,15 +32,17 @@ Project repositories call them with a **versioned git source**. Environments onl
 | | aws-config | `operations/aws-config` | Recorder + managed rules |
 | | security-hub | `operations/security-hub` | Security Hub enablement |
 
-Each module includes: `main.tf`, `variables.tf`, `outputs.tf`, `versions.tf`.
+Each module has: `main.tf`, `variables.tf`, `outputs.tf`, `versions.tf`.
 
-## How a new project uses these modules
+---
 
-### 1. Project repo structure (recommended)
+## Standard consumption (project repo)
+
+### Project layout
 
 ```
-project-a-infra/                 ← Project-A Repo
-├── main.tf                      ← calls CL-terraform modules
+project-a-infra/
+├── main.tf                 ← calls Root Modules (project root)
 ├── variables.tf
 ├── outputs.tf
 ├── backends/
@@ -49,11 +55,13 @@ project-a-infra/                 ← Project-A Repo
     └── prod.tfvars
 ```
 
-### 2. Call a module from the project (pin a version)
+See also: [`../project-template/`](../project-template/) for a ready starter.
+
+### Call modules with a pinned version
 
 ```hcl
 module "vpc" {
-  source = "git::https://github.com/<org>/<repo>.git//CL-terraform/Root%20Modules/networking/vpc?ref=v1.0.0"
+  source = "git::https://github.com/<org>/<root-modules-repo>.git//CL-terraform/Root%20Modules/networking/vpc?ref=v1.0.0"
 
   name       = var.name_prefix
   cidr_block = var.vpc_cidr
@@ -61,17 +69,25 @@ module "vpc" {
 }
 
 module "subnets" {
-  source = "git::https://github.com/<org>/<repo>.git//CL-terraform/Root%20Modules/networking/subnets?ref=v1.0.0"
+  source = "git::https://github.com/<org>/<root-modules-repo>.git//CL-terraform/Root%20Modules/networking/subnets?ref=v1.0.0"
 
-  vpc_id      = module.vpc.vpc_id
-  name_prefix = var.name_prefix
+  vpc_id          = module.vpc.vpc_id
+  name_prefix     = var.name_prefix
   public_subnets  = var.public_subnets
   private_subnets = var.private_subnets
   tags            = var.tags
 }
 
+module "app_sg" {
+  source = "git::https://github.com/<org>/<root-modules-repo>.git//CL-terraform/Root%20Modules/security/security-group?ref=v1.0.0"
+
+  name   = "${var.name_prefix}-app-sg"
+  vpc_id = module.vpc.vpc_id
+  tags   = var.tags
+}
+
 module "app_ec2" {
-  source = "git::https://github.com/<org>/<repo>.git//CL-terraform/Root%20Modules/compute/ec2?ref=v1.0.0"
+  source = "git::https://github.com/<org>/<root-modules-repo>.git//CL-terraform/Root%20Modules/compute/ec2?ref=v1.0.0"
 
   name                   = "${var.name_prefix}-app"
   ami_id                 = var.ami_id
@@ -82,9 +98,9 @@ module "app_ec2" {
 }
 ```
 
-> Prefer **release tags** (`v1.0.0`) in test/prod. Avoid `ref=main` for production.
+Use URL-encoded path `Root%20Modules` when the folder name contains a space.
 
-### 3. Environment values only
+### Environment = values only
 
 ```hcl
 # environments/dev.tfvars
@@ -98,28 +114,40 @@ tags = {
 }
 ```
 
-Same project `main.tf` for **dev / test / prod** — only tfvars and backend change.
-
-### 4. Deploy
+### Deploy into a target account
 
 ```bash
-cd project-a-infra
-terraform init -backend-config=backends/dev.hcl
+terraform init  -backend-config=backends/dev.hcl
 terraform plan  -var-file=environments/dev.tfvars
 terraform apply -var-file=environments/dev.tfvars
 ```
 
-## Ownership
+Pipeline selects:
 
-| Layer | Owner | Changes |
-|-------|-------|---------|
-| `CL-terraform/Root Modules` | Cloud COE | Shared standards, versioned releases |
-| Project repo | App / Platform team | Wiring + tfvars |
-| Env tfvars / pipeline | Env owners | Sizes, CIDRs, tags, account targeting |
+| Environment | tfvars | AWS account | State key idea |
+|-------------|--------|-------------|----------------|
+| dev | `environments/dev.tfvars` | Dev account | `project/dev/terraform.tfstate` |
+| test | `environments/test.tfvars` | Test account | `project/test/terraform.tfstate` |
+| prod | `environments/prod.tfvars` | Prod account | `project/prod/terraform.tfstate` |
+
+---
+
+## Access model (least privilege)
+
+| Actor | Root Modules repo | Project repo |
+|-------|-------------------|--------------|
+| Cloud COE | Write + release tags | Read (optional) |
+| Project team | **Read only** | Write |
+| CI / GitHub Actions | Contents: Read | Write as needed for PRs |
+
+Projects never need Write on this library to reuse modules.
+
+---
 
 ## Design rules
 
-1. Do **not** hardcode account IDs, regions, or env names inside modules.
-2. Do **not** copy these folders into project repos.
-3. Tag resources with `Module = "<domain>/<name>"`.
-4. When adding a module, update this catalog in the same change.
+1. No account IDs, regions, or env names hardcoded in modules.  
+2. Do not copy these folders into project repos.  
+3. Tag resources with `Module = "<domain>/<name>"`.  
+4. When adding/renaming a module, update this catalog in the same change.  
+5. Release with semver tags (`v1.0.0`) before projects adopt in prod.
