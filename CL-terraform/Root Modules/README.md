@@ -13,19 +13,29 @@ Reusable Terraform **Root Modules** for any current or upcoming project.
 |--------|--------|------|---------|
 | **foundation** | aws-organizations | `foundation/aws-organizations` | Org + OUs |
 | | identity-center | `foundation/identity-center` | Permission sets + account assignments |
+| **identity** | iam-role | `identity/iam-role` | IAM role + managed/inline policies + optional instance profile |
 | **networking** | vpc | `networking/vpc` | VPC primitive |
 | | subnets | `networking/subnets` | Public / private / database subnets |
+| | internet-gateway | `networking/internet-gateway` | Internet Gateway |
+| | nat-gateway | `networking/nat-gateway` | EIP + NAT Gateway per public subnet |
+| | route-tables | `networking/route-tables` | Route tables, routes, associations |
+| | vpc-flow-logs | `networking/vpc-flow-logs` | VPC Flow Logs to CloudWatch or S3 |
 | | transit-gateway | `networking/transit-gateway` | TGW hub + VPC attachments |
 | | route53-private-zone | `networking/route53-private-zone` | Private hosted zone + records |
 | | vpc-endpoints | `networking/vpc-endpoints` | Gateway + interface endpoints |
 | **security** | kms | `security/kms` | CMK + alias |
 | | secrets-manager | `security/secrets-manager` | Secrets |
+| | parameter-store | `security/parameter-store` | SSM Parameter Store map |
+| | acm-certificate | `security/acm-certificate` | ACM public cert + DNS validation outputs |
 | | acm-private-ca | `security/acm-private-ca` | Private CA |
 | | cross-account-role | `security/cross-account-role` | Cross-account IAM role |
 | | security-group | `security/security-group` | SG + rules |
-| **compute** | ec2 | `compute/ec2` | Managed EC2 instance |
+| **compute** | ec2 | `compute/ec2` | Managed EC2 instance (+ optional EBS volumes) |
+| | alb | `compute/alb` | Application Load Balancer + optional TG/HTTP listener |
 | | nlb | `compute/nlb` | Network Load Balancer |
-| **storage** | s3 | `storage/s3` | Secure S3 bucket baseline |
+| **database** | rds | `database/rds` | DB subnet group + encrypted RDS instance |
+| **storage** | s3 | `storage/s3` | Secure S3 bucket (+ lifecycle, deny insecure transport) |
+| | efs | `storage/efs` | EFS file system + mount targets |
 | **operations** | cloudwatch | `operations/cloudwatch` | Log groups, alarms, dashboard |
 | | sns | `operations/sns` | Alert topic + subscriptions |
 | | cloudtrail | `operations/cloudtrail` | Audit trail |
@@ -76,6 +86,22 @@ module "subnets" {
   public_subnets  = var.public_subnets
   private_subnets = var.private_subnets
   tags            = var.tags
+}
+
+module "internet_gateway" {
+  source = "git::https://github.com/<org>/<root-modules-repo>.git//CL-terraform/Root%20Modules/networking/internet-gateway?ref=v1.0.0"
+
+  vpc_id = module.vpc.vpc_id
+  name   = "${var.name_prefix}-igw"
+  tags   = var.tags
+}
+
+module "nat_gateway" {
+  source = "git::https://github.com/<org>/<root-modules-repo>.git//CL-terraform/Root%20Modules/networking/nat-gateway?ref=v1.0.0"
+
+  name_prefix        = var.name_prefix
+  public_subnet_ids  = module.subnets.public_subnet_ids_map
+  tags               = var.tags
 }
 
 module "app_sg" {

@@ -88,6 +88,22 @@ variable "kms_key_id" {
   default = null
 }
 
+variable "ebs_block_devices" {
+  description = "Optional additional EBS volumes attached to the instance"
+  type = list(object({
+    device_name           = string
+    volume_size           = number
+    volume_type           = optional(string, "gp3")
+    iops                  = optional(number)
+    throughput            = optional(number)
+    encrypted             = optional(bool, true)
+    kms_key_id            = optional(string)
+    delete_on_termination = optional(bool, true)
+    snapshot_id           = optional(string)
+  }))
+  default = []
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

@@ -28,6 +28,21 @@ resource "aws_instance" "this" {
     delete_on_termination = var.root_delete_on_termination
   }
 
-  tags = merge(var.tags, { Name = var.name, Module = "compute/ec2" })
+  dynamic "ebs_block_device" {
+    for_each = var.ebs_block_devices
+    content {
+      device_name           = ebs_block_device.value.device_name
+      volume_size           = ebs_block_device.value.volume_size
+      volume_type           = ebs_block_device.value.volume_type
+      iops                  = ebs_block_device.value.iops
+      throughput            = ebs_block_device.value.throughput
+      encrypted             = ebs_block_device.value.encrypted
+      kms_key_id            = coalesce(ebs_block_device.value.kms_key_id, var.kms_key_id)
+      delete_on_termination = ebs_block_device.value.delete_on_termination
+      snapshot_id           = ebs_block_device.value.snapshot_id
+    }
+  }
+
+  tags        = merge(var.tags, { Name = var.name, Module = "compute/ec2" })
   volume_tags = merge(var.tags, { Name = var.name })
 }

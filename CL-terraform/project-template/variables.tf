@@ -13,6 +13,7 @@ variable "vpc_cidr" {
 }
 
 variable "public_subnets" {
+  description = "Public subnets for IGW/NAT path (required for internet-gateway + nat-gateway wiring)"
   type = list(object({
     cidr_block = string
     az         = string

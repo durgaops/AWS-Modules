@@ -21,6 +21,55 @@ module "subnets" {
   tags             = var.tags
 }
 
+module "internet_gateway" {
+  source = "git::https://github.com/<org>/<root-modules-repo>.git//CL-terraform/Root%20Modules/networking/internet-gateway?ref=v1.0.0"
+
+  vpc_id = module.vpc.vpc_id
+  name   = "${var.name_prefix}-igw"
+  tags   = var.tags
+}
+
+module "nat_gateway" {
+  source = "git::https://github.com/<org>/<root-modules-repo>.git//CL-terraform/Root%20Modules/networking/nat-gateway?ref=v1.0.0"
+
+  name_prefix = var.name_prefix
+  # Centralized NAT (one AZ) — for HA use full public_subnet_ids_map
+  public_subnet_ids = {
+    "0" = module.subnets.public_subnet_ids[0]
+  }
+  tags = var.tags
+}
+
+module "route_tables" {
+  source = "git::https://github.com/<org>/<root-modules-repo>.git//CL-terraform/Root%20Modules/networking/route-tables?ref=v1.0.0"
+
+  vpc_id = module.vpc.vpc_id
+  tags   = var.tags
+
+  route_tables = {
+    public = {
+      name = "${var.name_prefix}-public"
+      routes = [
+        {
+          destination_cidr_block = "0.0.0.0/0"
+          gateway_id             = module.internet_gateway.internet_gateway_id
+        }
+      ]
+      subnet_ids = module.subnets.public_subnet_ids
+    }
+    private = {
+      name = "${var.name_prefix}-private"
+      routes = [
+        {
+          destination_cidr_block = "0.0.0.0/0"
+          nat_gateway_id         = values(module.nat_gateway.nat_gateway_ids)[0]
+        }
+      ]
+      subnet_ids = module.subnets.private_subnet_ids
+    }
+  }
+}
+
 module "app_sg" {
   source = "git::https://github.com/<org>/<root-modules-repo>.git//CL-terraform/Root%20Modules/security/security-group?ref=v1.0.0"
 

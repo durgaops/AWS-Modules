@@ -56,9 +56,11 @@ CL-terraform/
 ├── README.md                          ← this file (standard flow)
 ├── Root Modules/                      ← reusable modules (COE-owned)
 │   ├── foundation/
+│   ├── identity/
 │   ├── networking/
 │   ├── security/
 │   ├── compute/
+│   ├── database/
 │   ├── storage/
 │   └── operations/
 └── project-template/                  ← copy pattern for new project repos
