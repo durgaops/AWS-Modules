@@ -20,9 +20,14 @@ Reusable Terraform **Root Modules** for any current or upcoming project.
 | | nat-gateway | `networking/nat-gateway` | EIP + NAT Gateway per public subnet |
 | | route-tables | `networking/route-tables` | Route tables, routes, associations |
 | | vpc-flow-logs | `networking/vpc-flow-logs` | VPC Flow Logs to CloudWatch or S3 |
-| | transit-gateway | `networking/transit-gateway` | TGW hub + VPC attachments |
-| | route53-private-zone | `networking/route53-private-zone` | Private hosted zone + records |
 | | vpc-endpoints | `networking/vpc-endpoints` | Gateway + interface endpoints |
+| | security-group | `networking/security-group` | SG + ingress/egress rules |
+| | transit-gateway | `networking/transit-gateway` | TGW hub + optional VPC attachments |
+| | tgw-vpc-attachment | `networking/tgw-vpc-attachment` | Spoke VPC attachment to existing TGW |
+| | nlb | `networking/nlb` | Network Load Balancer + optional TG/listener |
+| | alb | `networking/alb` | Application Load Balancer + optional TG/HTTP listener |
+| | route53-private-dns | `networking/route53-private-dns` | Private hosted zone + records |
+| | route53-private-zone | `networking/route53-private-zone` | Private hosted zone + records (legacy path) |
 | **security** | kms | `security/kms` | CMK + alias |
 | | secrets-manager | `security/secrets-manager` | Secrets |
 | | parameter-store | `security/parameter-store` | SSM Parameter Store map |

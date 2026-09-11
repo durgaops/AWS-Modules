@@ -1,4 +1,6 @@
 ﻿# Gateway and interface VPC endpoints for private AWS access.
+# Place maintenance/SSM/patching interface endpoints (ssm, ssmmessages, ec2messages)
+# in workload VPCs that host EC2 so patch traffic stays local and does not affect app paths.
 
 resource "aws_vpc_endpoint" "gateway" {
   for_each = var.gateway_endpoints
