@@ -72,7 +72,8 @@ CL-terraform/
 ```
 
 Full module catalog: **[Root Modules/README.md](./Root%20Modules/README.md)**  
-New project starter: **[project-template/](./project-template/)**
+New project starter: **[project-template/](./project-template/)**  
+CCOE access (AWS, CT, AFT, repos, pipelines): **[CCOE_ACCESS_REQUIREMENTS.md](./CCOE_ACCESS_REQUIREMENTS.md)**
 
 ---
 
@@ -118,6 +119,8 @@ Same project `main.tf` for all environments — only tfvars + backend + account 
 | Project `main.tf` wiring | Project / Platform team |
 | Env tfvars & account targeting | Project + Platform / CloudOps |
 | AWS apply roles (OIDC) | Platform / Security |
+
+For **what access CCOE needs** on Master, AFT, Control Tower, workload accounts, Git repos, and pipelines, see **[CCOE_ACCESS_REQUIREMENTS.md](./CCOE_ACCESS_REQUIREMENTS.md)**.
 
 ---
 
