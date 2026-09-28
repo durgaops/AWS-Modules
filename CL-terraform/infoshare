@@ -1,0 +1,392 @@
+
+
+TCH Reusable Terraform Module – VPC Baseline
+Unpublished changes
+Akkinapalli, Durga Pratap - Contractor
+Edit
+
+Share
+
+
+TCH Reusable Terraform Module – VPC Baseline
+
+
+
+By Akkinapalli, Durga Pratap - Contractor
+
+3 min
+
+2
+
+Add a reaction
+1. Purpose
+The VPC Baseline reusable Terraform module provides a standard and secure network foundation for TCH AWS environments.
+
+The same module is reusable across Non-Prod and Prod by supplying environment-specific values through Terraform variables.
+
+2. Prerequisites
+Requirement
+
+Description
+
+AWS Region
+
+Approved target AWS Region
+
+VPC CIDR
+
+Approved CIDR range for the VPC
+
+Subnet CIDRs
+
+Approved workload, endpoint, NLB, and TGW CIDRs
+
+Availability Zone
+
+One or more approved AZs
+
+VPC Endpoints
+
+List of AWS services requiring private connectivity
+
+Endpoint Access
+
+Approved source CIDRs for endpoint connectivity
+
+AWS Access
+
+Terraform deployment access to the target account
+
+Terraform State
+
+Remote backend/state configuration
+
+3. Module Location
+        ttps://<github.org>/CCOE/tch-central-terraform-modules-repo/tree/feature/CT-2603/Modules/networking/vpc
+
+
+
+Modules/
+└── networking/
+    └── vpc-baseline/
+        ├── main.tf
+        ├── variables.tf
+        ├── outputs.tf
+        ├── versions.tf
+        └── README.md
+4. How a Project Uses It
+The project calls the central reusable module and passes environment-specific values.
+
+
+
+module "vpc" {
+  source = "git::<CENTRAL_TERRAFORM_REPO>//Modules/networking/vpc-baseline?ref=<VPC_MODULE_VERSION>"
+  name       = var.vpc_name
+  vpc_cidr   = var.vpc_cidr
+  az_subnets = var.az_subnets
+  interface_endpoints    = var.interface_endpoints
+  gateway_endpoints      = var.gateway_endpoints
+  endpoint_ingress_cidrs = var.endpoint_ingress_cidrs
+  tags = var.tags
+}
+ 
+
+5. Non-Prod / Prod Usage
+The same module is reused for both environments.
+
+
+
+             VPC Baseline Module
+                    |
+            +-------+-------+
+            |               |
+        Non-Prod           Prod
+            |               |
+      Environment       Environment
+        Inputs            Inputs
+Configuration
+
+Non-Prod
+
+Prod
+
+AWS Account
+
+Non-Prod account
+
+Prod account
+
+VPC CIDR
+
+Environment-specific
+
+Environment-specific
+
+Subnet CIDRs
+
+Environment-specific
+
+Environment-specific
+
+Availability Zones
+
+Configurable
+
+Configurable
+
+Endpoints
+
+As required
+
+As required
+
+Routes
+
+As required
+
+As required
+
+Tags
+
+Non-Prod values
+
+Prod values
+
+Terraform State
+
+Separate
+
+Separate
+
+6. What This Module Creates
+Resource / Component
+
+Purpose
+
+VPC
+
+Core network
+
+Workload Private Subnet(s)
+
+EC2/application workloads
+
+Endpoint Private Subnet(s)
+
+Interface VPC Endpoint ENIs
+
+NLB Private Subnet(s)
+
+Internal Network Load Balancers
+
+TGW Private Subnet(s)
+
+Transit Gateway attachments
+
+Route Tables
+
+Subnet routing
+
+Route Table Associations
+
+Connect subnets to route tables
+
+VPC Flow Logs
+
+Network traffic logging
+
+CloudWatch Log Group
+
+Flow Log destination
+
+Flow Log IAM Role/Policy
+
+Allows Flow Logs to publish logs
+
+Default Security Group Hardening
+
+Restricts default SG usage
+
+Default NACL Hardening
+
+Applies baseline network restrictions
+
+Interface VPC Endpoints
+
+Private access to AWS services
+
+Gateway VPC Endpoints
+
+Private access to supported services such as S3
+
+Endpoint Security Group
+
+Controls Interface Endpoint access
+
+7. Inputs
+All environment-specific values are passed through Terraform variables.
+
+VPC Inputs
+Input
+
+Required
+
+Description
+
+name
+
+Yes
+
+VPC name/prefix
+
+vpc_cidr
+
+Yes
+
+Primary VPC CIDR
+
+enable_dns_support
+
+No
+
+Enables VPC DNS support
+
+enable_dns_hostnames
+
+No
+
+Enables DNS hostnames
+
+instance_tenancy
+
+No
+
+VPC tenancy configuration
+
+tags
+
+No
+
+Common project tags
+
+Subnet / AZ Inputs
+Input
+
+Required
+
+Description
+
+az_subnets
+
+Yes
+
+Map of AZ and subnet CIDR configuration
+
+workload_cidr
+
+Yes per AZ
+
+Workload subnet CIDR
+
+endpoint_cidr
+
+Yes per AZ
+
+VPC Endpoint subnet CIDR
+
+nlb_cidr
+
+Yes per AZ
+
+NLB subnet CIDR
+
+tgw_cidr
+
+Yes per AZ
+
+TGW subnet CIDR
+
+The module can start with one AZ.
+
+
+
+az_subnets = {
+  "us-east-1a" = {
+    workload_cidr = var.workload_cidr
+    endpoint_cidr = var.endpoint_cidr
+    nlb_cidr      = var.nlb_cidr
+    tgw_cidr      = var.tgw_cidr
+  }
+}
+Additional AZs can be added later through the same input map without changing the reusable module code.
+
+VPC Endpoint Inputs
+Input
+
+Required
+
+Description
+
+Input
+
+Required
+
+Description
+
+interface_endpoints
+
+No
+
+Interface endpoints required by the environment
+
+gateway_endpoints
+
+No
+
+Gateway endpoints required by the environment
+
+endpoint_ingress_cidrs
+
+Yes when Interface Endpoints are used
+
+Approved source CIDRs
+
+private_dns_enabled
+
+No
+
+Private DNS configuration
+
+endpoint_tags
+
+No
+
+Endpoint-specific tags
+
+Typical endpoint services may include SSM, ECR, KMS, Secrets Manager, CloudWatch Logs, S3, or other approved AWS services.
+
+Route / Logging Inputs
+Input
+
+Description
+
+route_table_config
+
+Route-table configuration by subnet tier
+
+routes
+
+Environment-specific route definitions
+
+flow_log_traffic_type
+
+Flow Log traffic type
+
+flow_log_retention_days
+
+CloudWatch retention period
+
+flow_log_name
+
+Flow Log naming configuration
+
