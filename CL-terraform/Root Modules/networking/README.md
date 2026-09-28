@@ -32,6 +32,18 @@ Tag: `Module = "networking/<name>"`
 
 ---
 
+## TCH VPC baseline
+
+**Use `networking/vpc-baseline` for the TCH private VPC standard.** One module creates workload, endpoint, NLB, and Transit Gateway subnets, route tables, flow logs, hardened default security group and NACL, and the requested VPC endpoints. Non-Prod and Prod reuse it with different variables.
+
+## One package vs individual modules
+
+**Use `networking/vpc-package` when a VPC needs public subnets, an Internet Gateway, and NAT.** It creates the VPC together with those, plus route tables, NACLs, VPC Flow Logs, and default endpoints.
+
+Use the individual modules below only when you need one piece on its own (for example adding an endpoint later).
+
+ALB, NLB, TGW attachment, and Route 53 stay outside the package.
+
 ## VPC foundation pattern
 
 Wire modules in this order for a typical private VPC:

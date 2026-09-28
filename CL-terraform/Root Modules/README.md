@@ -14,7 +14,9 @@ Reusable Terraform **Root Modules** for any current or upcoming project.
 | **foundation** | aws-organizations | `foundation/aws-organizations` | Org + OUs |
 | | identity-center | `foundation/identity-center` | Permission sets + account assignments |
 | **identity** | iam-role | `identity/iam-role` | IAM role + managed/inline policies + optional instance profile |
-| **networking** | vpc | `networking/vpc` | VPC primitive |
+| **networking** | vpc-baseline | `networking/vpc-baseline` | **TCH VPC baseline:** private workload, endpoint, NLB, and TGW subnets + flow logs + endpoints |
+| | vpc-package | `networking/vpc-package` | Alternate full VPC with public subnets, IGW, and NAT |
+| | vpc | `networking/vpc` | VPC primitive only |
 | | subnets | `networking/subnets` | Public / private / database subnets |
 | | internet-gateway | `networking/internet-gateway` | Internet Gateway |
 | | nat-gateway | `networking/nat-gateway` | EIP + NAT Gateway per public subnet |
