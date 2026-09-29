@@ -1,0 +1,130 @@
+TDCJ CLOUD GOVERNANCE
+GOV-02 / GOV-03 — GitOps Runbook — GitHub Standards Reference
+Owner: James Johnson — Cloud Governance Lead   |   Version: 1.0   |   CONFIDENTIAL
+
+Framework Alignment
+CAF: Deployment Acceleration     WAF: Operational Excellence · Reliability
+
+1.  Purpose
+
+This runbook is the step-by-step operational guide for every developer and engineer working with the TDCJ GitHub organization and Azure deployment pipeline. Follow this runbook for every infrastructure change. No exceptions.
+
+2.  GitHub Organization Standards (Revise this based on Richard B recommendations)
+
+Standard	Requirement
+Organization Name	TDCJ (or TDCJ-Cloud — to be confirmed with GitHub admin)
+Organization Owner	
+Repository Naming	tdcj-[workload]-[component] — e.g. tdcj-cjis-infrastructure, tdcj-shared-networking
+Default Branch	main — all production deployments originate from main
+Branch Protection	Required: PR before merge, at least 1 approval, dismiss stale reviews, require status checks to pass
+Admins	Cloud Governance Lead only — no one else has admin rights to the org
+Access	Developers: Write to feature branches only. Cloud Engineers: Write + review. Gov. Lead: Admin.
+
+3.  Repository Structure Standard
+A recommended approach based on industry best practices but not an enforceable structure
+
+Every workload repository must follow this folder structure:
+/modules                         (shared reusable Bicep modules)
+  /network                        (VNet, NSG, subnet modules)
+  /compute                        (VM, App Service modules)
+  /data                           (SQL, Storage Account modules)
+  /security                       (Key Vault, identity modules)
+/workloads
+  /[workload-name]
+    main.bicep                    (workload-level deployment)
+    /params
+      dev.bicepparam               (dev environment parameters)
+      test.bicepparam              (test environment parameters)
+      stg.bicepparam               (staging parameters)
+      prod.bicepparam              (production parameters)
+/.github
+  /workflows
+    deploy.yml                    (main pipeline definition)
+    pr-validation.yml             (PR validation — what-if + lint)
+
+4.  Step-by-Step: Making a Change
+
+Step 1 — Create a feature branch
+Never work directly on main. Always create a feature branch first.
+git checkout main
+git pull origin main
+git checkout -b feature/[your-change-description]
+Branch naming: feature/, fix/, chore/ prefix. Use kebab-case. Example: feature/add-cjis-keyvault
+
+Step 2 — Write your Bicep code
+•	Use approved modules from /modules wherever possible — do not copy and paste module code into workload files
+•	Never hardcode secrets, passwords, or connection strings — reference Key Vault using the existing() function
+•	Every resource must include all four required tags: Environment, Owner, CostCenter, Project
+•	Follow the naming convention: TDCJ-Platform-Environment-Region-Service-Purpose-Instance
+
+Step 3 — Validate your Bicep locally
+az bicep build --file main.bicep
+Fix all linting errors before opening a PR. The pipeline will fail if linting errors exist.
+
+Step 4 — Open a Pull Request
+Push your branch and open a PR targeting main. Fill in every field of the PR template:
+•	Change Classification: Standard / Normal / Significant / Emergency
+•	What is changing and why: clear description of the resources being added/modified/removed
+•	What-if output: the pipeline runs what-if automatically — confirm the output matches your intent
+•	Rollback plan: how to reverse this change if it causes issues
+•	Testing evidence: confirmation that the change was tested in dev before requesting production approval
+
+Step 5 — Pipeline runs automatically
+On PR open, the pipeline automatically runs:
+1.	Bicep lint — fails if any linting errors
+2.	What-if analysis — shows exact resource changes
+3.	Security scan — flags any credentials committed to code
+4.	Tag validation — confirms all required tags are present
+Review the what-if output carefully. If it shows more changes than you expected — investigate before requesting review.
+
+Step 6 — Request review
+Assign the Cloud Governance Lead as reviewer. The PR cannot be merged without at least one approval. Add a comment summarizing the what-if output and confirming it matches your intent.
+
+Step 7 — Pipeline deploys to dev
+On PR merge approval, the pipeline automatically deploys to dev. Validate that the resource exists and behaves correctly in dev before proceeding.
+
+Step 8 — Approve production gate
+The pipeline pauses at the production gate. The designated approver (Cloud Governance Lead for Normal changes, IT Director for Significant changes) explicitly approves. Production deployment begins only after this approval.
+
+Step 9 — Pipeline deploys to production
+The pipeline deploys to production automatically after gate approval. Monitor the deployment in GitHub Actions. A failed production deployment triggers an immediate alert to the Cloud Governance Lead.
+
+Step 10 — Post-deployment validation
+Validate the change in production within 30 minutes of deployment. Add a comment to the PR confirming validation. The PR is closed after successful validation.
+
+5.  Emergency Break-Glass Process
+
+Use this process ONLY for active production incidents requiring immediate action. Misusing break-glass for convenience is a governance violation.
+
+5.	Contact Cloud Governance Lead by phone or Teams — same hour, no waiting
+6.	Gov. Lead contacts IT Director for verbal authorization
+7.	Gov. Lead documents the emergency in the exception register before or within 1 hour of the action
+8.	Engineer takes the minimum required emergency action
+9.	Engineer opens a backfill PR within 24 hours capturing the change in Bicep
+10.	Backfill PR links to the exception register entry
+11.	Gov. Lead reviews at next governance board meeting
+
+6.  Common Mistakes to Avoid
+
+Mistake	Why It Matters	Correct Approach
+Working directly on main branch	Bypasses PR review and branch protection — no approval trail	Always create a feature branch. main accepts merges only.
+Hardcoding secrets in Bicep	Secrets in Git are permanent — a security incident	Use Key Vault existing() reference. Never put passwords in parameters.
+Skipping the PR template fields	Incomplete PRs fail the pipeline and block deployment	Fill in every field. Change classification is required.
+Copying module code instead of referencing	Creates drift and maintenance issues across workloads	Use module reference in /modules. Never copy module content.
+Fixing resources in the portal instead of IaC	Creates drift between IaC and actual environment	Fix in Bicep, open PR, deploy through pipeline. Portal is read-only for production.
+
+7.  Document Ownership
+
+
+Document Owner
+Name: James Johnson
+Role: Cloud Governance Lead
+Signature: ___________________________
+Date: _______________________________	Reviewed & Approved — Governance Lead
+Name: James Johnson
+Cloud Governance Lead
+Signature: ___________________________
+Date: _______________________________
+
+— End of GOV-03 GitOps Runbook —
+TDCJ Cloud Governance  |  Confidential  |  v1.0  |  May 2026
